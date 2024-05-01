@@ -4,8 +4,8 @@ import routes from './src/routes/userRoutes.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 const options = {
   definition: {
@@ -24,6 +24,9 @@ const options = {
   },
   apis: ['./src/routes/*.js'], // paths to files containing Swagger annotations
 };
+const swaggerSpec = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 dotenv.config();
 
