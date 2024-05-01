@@ -1,11 +1,11 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import routes from './src/routes/userRoutes.js';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+const express = require('express');
+const mongoose = require('mongoose');
+const routes = require('./src/routes/userRoutes.js');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const options = {
   definition: {
@@ -39,24 +39,27 @@ mongoose.connect(process.env.DB_URL || 'mongodb://localhost:27017/CRMdb');
 app.use(express.json());
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from the 'public' directory
 app.use(express.static("public"));
 
 // JWT setup
 app.use((req, res, next) => {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
         jwt.verify(req.headers.authorization.split(' ')[1], process.env.JWT_SECRET, (err, decode) => {
-            if (err) req.user = undefined;
+            if (err) {
+                return res.status(401).json({ message: 'Unauthorized' });
+            }
             req.user = decode;
             next();
         });
     } else {
-        req.user = undefined;
-        next();
+        return res.status(401).json({ message: 'Unauthorized' });
     }
 });
 
 // Routes
-routes(app);
+routes(app); // Assuming routes are defined in userRoutes.js
 
 // Error handling middleware
 app.use((err, req, res, next) => {
