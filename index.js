@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 // mongoose connection
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DB_URL || 'mongodb://localhost:27017/CRMdb');
+mongoose.connect(process.env.DB_URL || 'mongodb://localhost:27017/Test_Scenario'); //database name
 
 
 // For parsing application/json
