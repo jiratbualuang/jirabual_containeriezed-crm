@@ -6,8 +6,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
