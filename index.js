@@ -6,6 +6,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -32,6 +35,28 @@ app.use((req, res, next) => {
         next();
     }
 });
+
+const options = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'CRM API',
+        version: '1.0.0',
+        description: 'A simple CRM API',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Development server',
+        },
+      ],
+    },
+    apis: ['./src/routes/*.js'], // paths to files containing Swagger annotations
+  };
+  
+  const swaggerSpec = swaggerJsdoc(options);
+  
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 routes(app);
