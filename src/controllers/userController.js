@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserSchema } from '../models/userModels.js';
+import { validationResult } from 'express-validator';
 
 const User = mongoose.model('User', UserSchema);
-
 
 export const getUser = async (req, res) => {
     try {
@@ -27,9 +27,15 @@ export const loginRequired = (req, res, next) => {
     }
 };
 
-
 export const register = async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+
+
+        }
+
         const saltRounds = 10;
         const newUser = new User(req.body);
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -43,9 +49,13 @@ export const register = async (req, res) => {
     }
 };
 
-
 export const login = async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
             return res.status(401).json({ message: 'Authentication failed. No user found' });
@@ -53,7 +63,7 @@ export const login = async (req, res) => {
         if (!user.comparePassword(req.body.password, user.hashPassword)) {
             return res.status(401).json({ message: 'Authentication failed. Wrong password' });
         }
-        const token = jwt.sign({ email: user.email, username: user.username, _id: user.id }, 'RESTFULAPIs');
+        const token = jwt.sign({ email: user.email, username: user.username, _id: user.id }, process.env.JWT_SECRET);
         return res.json({ token });
     } catch (err) {
         return res.status(500).send({ message: 'Internal server error' });
