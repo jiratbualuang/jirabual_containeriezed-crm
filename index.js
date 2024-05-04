@@ -3,11 +3,10 @@ import mongoose from 'mongoose';
 import routes from './src/routes/userRoutes.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
-dotenv.config();
-
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
