@@ -1,4 +1,5 @@
 import { addNewContact, getContacts, getContactWithID, updateContact, deleteContact } from '../controllers/crmController.js';
+
 /**
  * @swagger
  * /contact:
@@ -15,6 +16,7 @@ import { addNewContact, getContacts, getContactWithID, updateContact, deleteCont
  *               items:
  *                 $ref: '#/components/schemas/Contact'
  */
+
 const routes = (app) => {
     app.route('/contact')
     // get all contacts
