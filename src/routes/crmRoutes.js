@@ -1,22 +1,5 @@
 import { addNewContact, getContacts, getContactWithID, updateContact, deleteContact } from '../controllers/crmController.js';
 
-/**
- * @swagger
- * /contact:
- *   get:
- *     summary: Retrieve a list of contacts
- *     description: Retrieve a list of all contacts in the CRM system.
- *     responses:
- *       200:
- *         description: A list of contacts.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Contact'
- */
-
 const routes = (app) => {
     app.route('/contact')
     // get all contacts
