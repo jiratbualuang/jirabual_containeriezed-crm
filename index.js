@@ -36,22 +36,36 @@ app.use((req, res, next) => {
 });
 
 const options = {
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'CRM API',
-        version: '1.0.0',
-        description: 'A simple CRM API',
-      },
-      servers: [
-        {
-          url: 'http://localhost:3000',
-          description: 'Development server',
-        },
-      ],
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'CRM API',
+      version: '1.0.0',
+      description: 'A simple CRM API',
     },
-    apis: ['./src/routes/*.js'], // paths to files containing Swagger annotations
-  };
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+      },
+    ],
+    components: {
+      schemas: {
+        Contact: {
+          type: 'object',
+          properties: {
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            email: { type: 'string', format: 'email' },
+            // Define other properties of the Contact schema here
+          },
+        },
+      },
+    },
+  },
+  apis: ['./src/routes/*.js'], // paths to files containing Swagger annotations
+};
+
   
   const swaggerSpec = swaggerJsdoc(options);
   
