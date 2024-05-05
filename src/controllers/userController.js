@@ -32,7 +32,10 @@ export const register = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
+
+
         }
+
         const saltRounds = 10;
         const newUser = new User(req.body);
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -63,6 +66,6 @@ export const login = async (req, res) => {
         const token = jwt.sign({ email: user.email, username: user.username, _id: user.id }, process.env.JWT_SECRET);
         return res.json({ token });
     } catch (err) {
-        // return res.status(500).send({ message: 'Internal server error' });
+        return res.status(500).send({ message: 'Internal server error' });
     }
 };
