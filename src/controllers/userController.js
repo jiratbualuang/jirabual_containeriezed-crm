@@ -56,31 +56,16 @@ export const login = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { email, password } = req.body;
-
-        // Check if the user exists in the database
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: req.body.email });
         if (!user) {
             return res.status(401).json({ message: 'Authentication failed. No user found' });
         }
-
-        // Compare passwords
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
+        if (!user.comparePassword(req.body.password, user.hashPassword)) {
             return res.status(401).json({ message: 'Authentication failed. Wrong password' });
         }
-
-        // Generate JWT token
-        const token = jwt.sign(
-            { email: user.email, username: user.username, _id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' } // Token expires in 1 hour
-        );
-
-        // Return token in response
+        const token = jwt.sign({ email: user.email, username: user.username, _id: user.id }, process.env.JWT_SECRET);
         return res.json({ token });
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).send({ message: 'Internal server error' });
     }
 };
